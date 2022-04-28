@@ -1,10 +1,6 @@
 {
   "name": "koi-workspace",
-  "private": true,
   "version": "0.1.0",
-  "workspaces": [
-    "packages/koi-build"
-  ],
   "scripts": {
     "lint": "eslint --ext .ts --ignore-path .gitignore . --fix"
   },
@@ -12,21 +8,33 @@
     "graceful-fs": "^4"
   },
   "dependencies": {
+    "fs-extra": "^10.1.0",
+    "glob": "^8.0.1",
     "mkdirp": "^1"
   },
   "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^9.0.13",
     "@types/gulp": "^4",
+    "@types/lzma-native": "^4",
     "@types/mkdirp": "^1",
+    "@types/tar": "^6",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
+    "axios": "^0.26.1",
+    "cross-spawn": "^7",
     "eslint": "*",
     "eslint-config-prettier": "*",
     "eslint-import-resolver-typescript": "*",
     "eslint-plugin-import": "*",
     "eslint-plugin-prettier": "*",
     "gulp": "^4",
+    "lzma-native": "^8",
+    "node-stream-zip": "^1.15.0",
     "prettier": "*",
+    "tar": "^6",
     "ts-node": "^10",
     "typescript": "*"
-  }
+  },
+  "packageManager": "yarn@3.2.0"
 }

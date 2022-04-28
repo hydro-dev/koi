@@ -28,9 +28,9 @@ export async function spawnOut(
   >({}, { stdio: 'pipe' }, options)
   const child = spawn(command, parsedArgs, parsedOptions)
   let stdout = ''
-  child.stdout?.on('data', (x) => (stdout += x))
+  child.stdout?.on('data', (x: any) => (stdout += x))
   return new Promise<string>((resolve, reject) => {
-    child.on('close', (x) => {
+    child.on('close', (x: any) => {
       if (x) reject(x)
       else resolve(stdout)
     })
