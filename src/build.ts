@@ -57,7 +57,7 @@ export async function createInstance() {
 }
 
 async function main() {
-  console.log('Hydro Setup Tool')
+  console.log('Hydro Cli')
   const child: typeof Child = require('child_process')
   const fs: typeof Fs = require('fs')
   const cwd = __dirname + '/hydro'
@@ -81,6 +81,7 @@ async function main() {
         stdio: 'inherit',
         env: {
           ...process.env,
+          PATH: `${process.env.PATH}:${__dirname}:${__dirname}/node/bin:${__dirname}/mongodb/bin`,
           HOME: __dirname + '/home',
           ...env,
         },
@@ -129,10 +130,12 @@ async function main() {
           password: DATABASE_PASSWORD,
         })
       )
+      console.log('Start Add MongoDB User...')
       await run(
-        `pm2 start ../mongodb/bin/mongod -- --bind_ip 127.0.0.1`.split(' ')
+        'pm2 start mongod -- --dbpath ../db --bind_ip 127.0.0.1'.split(' ')
       )
       await sleep(5000)
+      console.log('Waiting MongoDB Start...')
       await run(
         (
           __dirname +
@@ -141,21 +144,15 @@ async function main() {
         false
       )
       await run(`pm2 del 0`.split(' '))
-      await run(
-        'pm2 start ../minio/bin/minio -- server /data/file --name minio'.split(
-          ' '
-        ),
-        true,
-        {
-          MINIO_ACCESS_KEY: MINIO_ACCESS_KEY,
-          MINIO_SECRET_KEY: MINIO_SECRET_KEY,
-        }
-      )
+      console.log('Starting hydrooj...')
+      await run('pm2 start minio -- server ../file'.split(' '), true, {
+        MINIO_ACCESS_KEY: MINIO_ACCESS_KEY,
+        MINIO_SECRET_KEY: MINIO_SECRET_KEY,
+      })
       const operations = [
-        'pm2 start ../minio -- server /data/file --name minio', //need token
-        'pm2 start ../mongodb/bin/mongod --name mongodb -- --auth --bind_ip 0.0.0.0',
-        'pm2 start ../sandbox',
-        'pm2 start ../node/bin/yarn --name hydrooj -- hydrooj',
+        'pm2 start mongod --name mongodb -- --dbpath ../db --auth --bind_ip 0.0.0.0',
+        'pm2 start sandbox',
+        `pm2 start ${__dirname}/node/bin/yarn --name hydrooj -- hydrooj`, // FIXME: couldnot found hydrooj
         'pm2 save',
       ]
       for (const operation of operations) {
