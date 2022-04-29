@@ -12,7 +12,11 @@ export async function exists(path: fs.PathLike): Promise<boolean> {
 }
 
 export async function notEmpty(path: fs.PathLike): Promise<boolean> {
-  return Boolean((await fs.promises.readdir(path)).length)
+  try {
+    return Boolean((await fs.promises.readdir(path)).length)
+  } catch (_) {
+    return false
+  }
 }
 
 export async function spawnOut(

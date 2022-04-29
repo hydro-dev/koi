@@ -16,7 +16,7 @@ const destPathLinux = resolve('node.tar.xz', 'cache')
 const buildDownloadNode =
   (srcPath: string, destPath: string): (() => Promise<void>) =>
   async () => {
-    info('Checking temporary cache.')
+    info('Checking Node.js temporary cache.')
     if (await exists(destPath)) {
       info('Node.js exists. Skipping download.')
       info("If you want to re-download Node.js, use 'gulp clean'.")
@@ -32,7 +32,7 @@ const buildDownloadNode =
   }
 
 async function extractNode(destPath: string) {
-  info('Checking temporary cache.')
+  info('Checking Node.js temporary cache.')
   if (await notEmpty(resolve('node', 'dist'))) {
     info('Node.js exists. Skipping extract.')
     return
