@@ -1,4 +1,4 @@
-import child from 'child_process'
+import axios from 'axios'
 import * as fs from 'fs'
 import { error, info } from 'gulplog'
 import stream from 'stream'
@@ -11,7 +11,7 @@ import { chmod } from 'fs-extra'
 
 const minioPath = 'https://dl.min.io/server/minio/release/linux-amd64/minio'
 const sandboxPath =
-  'https://github.com/criyle/go-judge/releases/download/v1.4.0/executorserver-amd64'
+  'https://github.com/criyle/go-judge/releases/download/v1.4.6/executorserver-amd64'
 const mongodbPath =
   'https://downloads.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-v5.0-latest.tgz'
 
@@ -32,7 +32,12 @@ const buildDownload =
     }
 
     info('Now downloading.')
-    await child.exec(`curl -sSL ${srcPath} -o ${destPath}`)
+    const res = await axios.get(srcPath, { responseType: 'stream' })
+    const writeStream = fs.createWriteStream(destPath)
+    await promisify(stream.finished)(
+      (res.data as stream.Readable).pipe(writeStream)
+    )
+    if (extract) await extractFile(name, destPath, extract)
   }
 
 async function extractFile(name: string, destPath: string, extract: string) {
