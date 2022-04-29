@@ -103,7 +103,7 @@ export async function cleanupInstance(): Promise<void> {
       '**/.{travis.yml,tsconfig.json,editorconfig}',
       '**/{Makefile,yarn.lock,package-lock.json,bower.json}',
       '**/.*{ignore,rc}',
-      '**/.*rc.{yaml,js,yml,json}',
+      '**/.*rc.{yaml,js,json}',
       '**/{.github,.vscode,test,example,examples,coverage}/**',
     ].map(globClean)
   )
